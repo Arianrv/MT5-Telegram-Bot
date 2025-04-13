@@ -1,5 +1,5 @@
 """
-                Created by  Bersavosh
+                Created by  Arianrv
                 Instagram:  @barsarnj
                 Email:      arianrv@gmail.com
                                                            """
