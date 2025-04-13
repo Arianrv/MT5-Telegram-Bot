@@ -1,0 +1,5 @@
+telethon
+apscheduler
+pytz
+jdatetime
+python-dotenv
