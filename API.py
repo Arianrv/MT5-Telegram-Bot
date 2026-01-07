@@ -4,7 +4,7 @@ from Functions import api_id, api_hash, load_config, save_config
 from Functions import Channel_VIP, Target_channel, modify_message, extract_number_from_text
 import asyncio
 
-# ------------------------  Setup Logging  ------------------------
+# --------------------------------------  Setup Logging  -----------------------------------------------
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -15,7 +15,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# ------------------------  Setup Telegram Client (User Login, NOT Bot!)  ------------------------
+# ------------------------  Setup Telegram Client (User Login, NOT Bot!)  ------------------------------
 client = TelegramClient('api_session', api_id, api_hash)
 
 
@@ -106,8 +106,19 @@ async def message_handler(event):
                     # Tolerance check for Dollar
                     if abs(number - last_price_d) <= tol:
                         adjusted_number += bubble  # Apply the bubble adjustment
-                        config["دلار"]["price_naghdi"] = adjusted_number  # Save updated price for Dollar
+
+                        if "نقدی" in line:
+                            config["دلار"]["price_naghdi"] = adjusted_number
+                            logger.info(f"✅ Updated دلار نقدی to {adjusted_number}")
+                        elif "پس" in line:
+                            config["دلار"]["price_pasfarda"] = adjusted_number
+                            logger.info(f"✅ Updated دلار پس‌فردا to {adjusted_number}")
+                        else:
+                            config["دلار"]["price_farda"] = adjusted_number
+                            logger.info(f"✅ Updated دلار فردا to {adjusted_number}")
+
                         save_config(config)
+
                         logger.info(f"✅ Updated Dollar Price: {number}, Adjusted: {adjusted_number}")
                     else:
                         logger.warning(f"❌ Price {number} outside tolerance {tol}. Ignoring.")
@@ -135,8 +146,18 @@ async def message_handler(event):
 
                     # Tolerance check for Euro
                     if abs(number - last_price_e) <= tol:
-                        adjusted_number += bubble  # Apply the bubble adjustment
-                        config["یورو"]["price_naghdi"] = adjusted_number  # Save updated price for Euro
+                        adjusted_number += bubble
+
+                        if "نقدی" in line:
+                            config["یورو"]["price_naghdi"] = adjusted_number
+                            logger.info(f"✅ Updated یورو نقدی to {adjusted_number}")
+                        elif "پس" in line:
+                            config["یورو"]["price_pasfarda"] = adjusted_number
+                            logger.info(f"✅ Updated یورو پس‌فردا to {adjusted_number}")
+                        else:
+                            config["یورو"]["price_farda"] = adjusted_number
+                            logger.info(f"✅ Updated یورو فردا to {adjusted_number}")
+
                         save_config(config)
                         logger.info(f"✅ Updated Euro Price: {number}, Adjusted: {adjusted_number}")
                     else:
